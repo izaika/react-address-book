@@ -26,11 +26,14 @@ class Home extends Component {
         </Form>
         <ul className="contacts list-group">
           {
-            this.props.contacts.map((contact, index) => {
-              return (
-                <ContactItem key={index} contact={contact} index={index}/>
-              )
-            })
+            (function (t) {
+              const view = [];
+              for (let key in t.props.contacts) {
+                let contact = t.props.contacts[key]
+                view.push(<ContactItem key={key} contact={contact} index={key}/>);
+              }
+              return view;
+            }(this))
           }
         </ul>
       </div>
