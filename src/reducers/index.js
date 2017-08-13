@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux'
 
-import { GET_CONTACTS, GET_CURRENT_CONTACT } from '../actions/index'
+import { GET_CONTACTS, GET_CURRENT_CONTACT, DELETE_CONTACT } from '../actions/index'
 
 function contacts (state = [], action) {
   switch (action.type) {
@@ -20,6 +20,15 @@ function currentContact (state = [], action) {
   }
 }
 
-const rootReducer = combineReducers({contacts, currentContact})
+function deleteContact (state = [], action) {
+  switch (action.type) {
+    case DELETE_CONTACT:
+      return action.contact
+    default:
+      return state
+  }
+}
+
+const rootReducer = combineReducers({contacts, currentContact, deleteContact})
 
 export default rootReducer

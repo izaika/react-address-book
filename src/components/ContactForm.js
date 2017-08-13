@@ -5,7 +5,7 @@ import { Form, FormGroup, FormControl, Button } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import firebase from '../config/firebase'
 
-import { fetchContact } from '../actions/index'
+import { removeContact, fetchContact, fetchContacts } from '../actions/index'
 
 class ContactForm extends Component {
   constructor () {
@@ -53,17 +53,15 @@ class ContactForm extends Component {
     }
     if (!isFormValid) return;
 
-    // submit to firebase
     let id = this.props.match.params.id
-    if (this.state.isNew) {
-      // add
-    } else {
-      // update
-      firebase.database().ref(`contacts/${id}`).set({
-        name: this.state.name,
-        email: this.state.email
+    firebase.database().ref(`contacts/${id}`).set({
+      name: this.state.name,
+      email: this.state.email
+    }).then(() => {
+      this.props.dispatch(fetchContacts()).then(() => {
+        this.props.history.push('/')
       });
-    }
+    });
   }
 
   render () {
@@ -89,7 +87,18 @@ class ContactForm extends Component {
           </FormGroup>
           <div className="buttons clearfix">
             {!this.state.isNew &&
-            <Button type="button" className="pull-left btn btn-danger">Delete <i className="icon-trash"></i></Button>}
+            <Button
+              type="button"
+              className="pull-left btn btn-danger"
+              onClick={
+                function () {
+                  this.props.dispatch(removeContact(this.props.match.params.id))
+                  this.props.dispatch(fetchContacts()).then(() => {
+                    this.props.history.push('/')
+                  });
+                }.bind(this)
+              }
+            >Delete <i className="icon-trash"></i></Button>}
 
             <div className="pull-right">
               <Link to="/" className="btn btn-default">Cancel</Link>
@@ -114,12 +123,4 @@ function mapStateToProps (state, ownProps) {
 }
 
 export default connect(mapStateToProps, null)(ContactForm)
-
-// ContactForm = connect(mapStateToProps, null)(ContactForm)
-
-// export default ContactForm = reduxForm({
-//   form: 'edit',
-//   enableReinitialize: true
-// })(ContactForm)
-
 

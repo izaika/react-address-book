@@ -1,23 +1,33 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Form, FormControl, Button } from 'react-bootstrap'
+import { Link } from 'react-router-dom'
 import ContactItem from './ContactItem'
+import { fetchContacts } from '../actions/index'
 
 // import {Link} from 'react-router-dom'
 
 class Home extends Component {
 
-  search (e) {
-    e.preventDefault()
-    let {contacts} = this.props
-    console.log(contacts)
+  constructor () {
+    super()
+
+    this.state = {
+      newItemId: false
+    }
+  }
+
+  componentWillMount () {
+    this.props.dispatch(fetchContacts()).then(() => {
+      let newItemId = parseInt(Object.keys(this.props.contacts).pop(), 10) + 1
+      this.setState({newItemId})
+    })
   }
 
   render () {
-    console.log(this.props.contacts)
     return (
       <div className="home">
-        <Form className="search-form" onSubmit={this.search.bind(this)}>
+        <Form className="search-form" onSubmit={() => {}}>
           <FormControl type="search"/>
           <Button type="submit">
             <i className="icon-search">
@@ -36,6 +46,7 @@ class Home extends Component {
             }(this))
           }
         </ul>
+        <Link to={`${this.state.newItemId}/edit`} className="btn btn-primary">Add new <i className="icon-plus"></i></Link>
       </div>
     )
   }
