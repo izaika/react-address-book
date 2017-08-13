@@ -5,8 +5,6 @@ import { Link } from 'react-router-dom'
 import ContactItem from './ContactItem'
 import { fetchContacts } from '../actions/index'
 
-// import {Link} from 'react-router-dom'
-
 class Home extends Component {
 
   constructor () {
@@ -27,7 +25,7 @@ class Home extends Component {
   render () {
     return (
       <div className="home">
-        <Form className="search-form" onSubmit={() => {}}>
+        <Form className="search-form" onSubmit={(e) => {e.preventDefault()}}>
           <FormControl type="search"/>
           <Button type="submit">
             <i className="icon-search">
